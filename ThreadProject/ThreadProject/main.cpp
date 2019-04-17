@@ -32,7 +32,31 @@ struct Vector2
         this->x = x;
         this->y = y;
     }
+    
+    
+    friend std::ostream& operator<<(std::ostream& stream, const Vector2 vec)
+    {
+        return stream << "(" << vec.x << "," << vec.y << ")" << std::endl;
+    }
 };
+
+//simple swap shuffle function
+//used to shuffle the Card::deck
+template<typename Type>
+void ShuffleArray(Type* array, uint8_t&& length)
+{
+    srand((int)time(nullptr));
+    
+    for(uint8_t i = 0; i < length; i++)
+    {
+        Type holder = array[i];
+        
+        uint8_t index = rand() % length;
+        
+        array[i] = array[index];
+        array[index] = holder;
+    }
+}
 
 int main(int argc, const char * argv[])
 {

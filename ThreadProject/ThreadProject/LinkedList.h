@@ -77,10 +77,10 @@ public:
     
     ~LinkedList()
     {
-        if (this->m_listLength != 0)
+        /*if (this->m_listLength != 0)
         {
             this->emptyListDeleteDynam();
-        }
+        }*/
     }
     
     void AddFirst(Type* element)
@@ -255,19 +255,22 @@ public:
         
         else
         {
+            Node<Type>* prev;
+            Node<Type*> current;
+            size_t count;
             if (index <= this->m_listLength / 2)
             {
-                Node<Type>* prev = &this->m_root->m_Next;
-                Node<Type>* current = &this->m_root->m_Next;
+                prev = this->m_root->m_Next;
+                current = this->m_root->m_Next;
                 
-                size_t count = 0;
+                count = 0;
             }
             else
             {
-                Node<Type>* prev = &this->m_root->m_Prev;
-                Node<Type>* current = &this->m_root->m_Prev;
+                prev = this->m_root->m_Prev;
+                current = this->m_root->m_Prev;
                 
-                size_t count = this->m_listLength;
+                count = this->m_listLength;
             }
             while (current)
             {
@@ -589,9 +592,9 @@ public:
         return stream;
     }
     
-    Node<type>* searchForward(const type& item, bool* itemFound)
+    Node<Type>* searchForward(const Type item, bool* itemFound)
     {
-        Node<type>* current = this->m_root.m_Next;
+        Node<Type>* current = this->m_root.m_Next;
         for (int i = 0; i < this->m_listLength; i++)
         {
             if(*itemFound == true)
@@ -608,10 +611,11 @@ public:
             
             current = current->m_Next;
         }
+        return nullptr;
     }
-    Node<type>* searchBackward(const type& item, bool* itemFound)
+    Node<Type>* searchBackward(const Type& item, bool* itemFound)
     {
-        Node<type>* current = this->m_root.m_Prev;
+        Node<Type>* current = this->m_root.m_Prev;
         for(int i = 0; i < this->m_listLength; i++)
         {
             if(*itemFound == true)
@@ -627,6 +631,7 @@ public:
             
             current = current->m_Prev;
         }
+        return nullptr;
     }
 };
 

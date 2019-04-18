@@ -25,18 +25,9 @@ struct Vector2
     float x=0;
     float y=0;
     
-    Vector2()
-    {
-        this->x = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
-        this->y = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
-        x*=255;
-        y*=255;
-    }
-    Vector2(float x, float y)
-    {
-        this->x = x;
-        this->y = y;
-    }
+    Vector2();
+
+    Vector2(float x, float y);
     
     
     friend std::ostream& operator<<(std::ostream& stream, const Vector2 vec)
@@ -44,39 +35,14 @@ struct Vector2
         return stream << "(" << vec.x << "," << vec.y << ")" << std::endl;
     }
     
-    bool operator==(const Vector2& other)
-    {
-        if(this->x == other.x && this->y == other.y)
-            return true;
-        
-        else
-            return false;
-    }
+    bool operator==(const Vector2& other);
     
-    void operator=(const Vector2& other)
-    {
-        this->x = other.x;
-        this->y = other.y;
-    }
+    void operator=(const Vector2& other);
 };
 
 //simple swap shuffle function
-//used to shuffle the Card::deck
 template<typename Type>
-void ShuffleArray(Type* array, uint16_t&& length)
-{
-    srand((int)time(nullptr));
-    
-    for(uint16_t i = 0; i < length; i++)
-    {
-        Type holder = array[i];
-        
-        uint8_t index = rand() % length;
-        
-        array[i] = array[index];
-        array[index] = holder;
-    }
-}
+void ShuffleArray(Type* array, uint16_t&& length);
 
 int main(int argc, const char * argv[])
 {
@@ -129,4 +95,52 @@ int main(int argc, const char * argv[])
         std::cout << "backSearch found " << *backSearchResult->m_Element << std::endl;
     
     //std::cout << list << std::endl;
+}
+
+    
+Vector2::Vector2()
+    {
+        this->x = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+        this->y = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+        x*=255;
+        y*=255;
+    }
+Vector2::Vector2(float x, float y)
+    {
+        this->x = x;
+        this->y = y;
+    }
+
+    
+bool Vector2::operator==(const Vector2& other)
+    {
+        if(this->x == other.x && this->y == other.y)
+            return true;
+        
+        else
+            return false;
+    }
+    
+void Vector2::operator=(const Vector2& other)
+    {
+        this->x = other.x;
+        this->y = other.y;
+    }
+
+//simple swap shuffle function
+//used to shuffle the Card::deck
+template<typename Type>
+void ShuffleArray(Type* array, uint16_t&& length)
+{
+    srand((int)time(nullptr));
+    
+    for(uint16_t i = 0; i < length; i++)
+    {
+        Type holder = array[i];
+        
+        uint8_t index = rand() % length;
+        
+        array[i] = array[index];
+        array[index] = holder;
+    }
 }

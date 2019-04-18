@@ -592,46 +592,66 @@ public:
         return stream;
     }
     
-    Node<Type>* searchForward(const Type item, bool* itemFound)
+    void searchForward(const Type& item, bool* itemFound, Node<Type>** output)
     {
         Node<Type>* current = this->m_root.m_Next;
         for (int i = 0; i < this->m_listLength; i++)
         {
             if(*itemFound == true)
-                return nullptr;
-            
+            {
+#ifdef DEBUG
+                std::cout << "searchForward exited because searchBackward found the item and marked itemFound as true" << std::endl;
+                std::cout << "curent node in searchForward was: " << i << std::endl;
+#endif
+                *output = nullptr;
+                return;
+            }
             if(*current->m_Element == item)
             {
 #ifdef DEBUG
-                std::cout << "index: " << i << std::endl;
+                std::cout << "searchForward found the item at index: " << i << std::endl;
+                std::cout << "current node is at adress: " << current << std::endl;
 #endif
                 *itemFound = true;
-                return current;
+                *output = current;
+                return;
             }
             
             current = current->m_Next;
         }
-        return nullptr;
+        *output = nullptr;
+        return;
     }
-    Node<Type>* searchBackward(const Type& item, bool* itemFound)
+    void searchBackward(const Type& item, bool* itemFound, Node<Type>** output)
     {
         Node<Type>* current = this->m_root.m_Prev;
         for(int i = 0; i < this->m_listLength; i++)
         {
             if(*itemFound == true)
-                return nullptr;
+            {
+#ifdef DEBUG
+                std::cout << "searchBackward exited because searchForward found the item and marked itemFound as true" << std::endl;
+                std::cout << "current node in searchBackward was: " << (this->m_listLength - 1 - i) << std::endl;
+#endif
+                *output = nullptr;
+                return;
+            }
+            
             if(*current->m_Element == item)
             {
 #ifdef DEBUG
-                std::cout << "index: " << i << std::endl;
+                std::cout << "searchBackward found the item at index: " << (this->m_listLength - 1 - i) << std::endl;
+                std::cout << "current node is at adress: " << current << std::endl;
 #endif
                 *itemFound = true;
-                return current;
+                *output = current;
+                return;
             }
             
             current = current->m_Prev;
         }
-        return nullptr;
+        *output = nullptr;
+        return;
     }
 };
 

@@ -10,8 +10,11 @@
 #define DEBUG
 #endif
 
+//#define OVERLAP
+#define SHUFFLE
+
 #include <iostream>
-#include <future>
+#include <thread>
 #include <stdlib.h>
 #include <time.h>
 
@@ -60,11 +63,11 @@ struct Vector2
 //simple swap shuffle function
 //used to shuffle the Card::deck
 template<typename Type>
-void ShuffleArray(Type* array, uint8_t&& length)
+void ShuffleArray(Type* array, uint16_t&& length)
 {
     srand((int)time(nullptr));
     
-    for(uint8_t i = 0; i < length; i++)
+    for(uint16_t i = 0; i < length; i++)
     {
         Type holder = array[i];
         
@@ -79,37 +82,51 @@ int main(int argc, const char * argv[])
 {
     srand((int)time(nullptr));
     
-    Vector2* vectors = new Vector2[100];
-    Vector2 vecTarget(1.0f,1.0f);
+    Vector2* vectors = new Vector2[10000];
+    Vector2 vecTarget(300.0f,300.0f);
     
-    vectors[99] = vecTarget;
+    vectors[9500] = vecTarget;
     //std::cout << vectors[99] << std::endl;
     
-    ShuffleArray<Vector2>(vectors, 100);
-    LinkedList<Vector2> list(vectors, 100);
+#ifdef SHUFFLE
+    ShuffleArray<Vector2>(vectors, 10000);
+#endif
+    LinkedList<Vector2> list(vectors, 10000);
     
     //std::cout << list << std::endl;
     
     bool itemFound = false;
     
-    //Node<Vector2>* item = list.searchForward(vecTarget, &itemFound);
+    Node<Vector2>* forwardSearchResult = nullptr;
+    Node<Vector2>* backSearchResult = nullptr;
     
-    //std::cout << *item->m_Element << std::endl;
+    int counter = 0;
     
-    //auto forwardSearch = std::async(&LinkedList<Vector2>::searchForward, &list, vecTarget, &itemFound);
-    auto backSearch = std::async(&LinkedList<Vector2>::searchBackward, &list, vecTarget, &itemFound);
+    std::thread first(&LinkedList<Vector2>::searchForward, &list, vecTarget, &itemFound, &forwardSearchResult);
+    std::thread second (&LinkedList<Vector2>::searchBackward, &list, vecTarget, &itemFound, &backSearchResult);
     
-    //Node<Vector2>* forwardNode = forwardSearch.get();
-    Node<Vector2>* backNode = backSearch.get();
-    /*
-    std::cout << "Address returned by searchForward: " << forwardNode << std::endl;
-    if(forwardNode)
-        std::cout << "forwardSearch found " << *forwardNode->m_Element << std::endl;
-    */
+    while(!forwardSearchResult && !backSearchResult)
+    {
+#ifdef OVERLAP
+        std::cout << "waithing for other threads" << std::endl;
+#endif
+        counter++;
+    }
     
-    std::cout << "Address returned by searchBackward: " << backNode << std::endl;
-    if(backNode)
-        std::cout << "forwardSearch found " << *backNode->m_Element << std::endl;
+    first.join();
+    second.join();
     
-    std::cout << list << std::endl;
+    std::cout << "counter incremented to: " << counter << std::endl;
+
+    
+    std::cout << "Address returned by searchForward: " << forwardSearchResult << std::endl;
+    if(forwardSearchResult)
+        std::cout << "forwardSearch found " << *forwardSearchResult->m_Element << std::endl;
+    
+    
+    std::cout << "Address returned by searchBackward: " << backSearchResult << std::endl;
+    if(backSearchResult)
+        std::cout << "backSearch found " << *backSearchResult->m_Element << std::endl;
+    
+    //std::cout << list << std::endl;
 }

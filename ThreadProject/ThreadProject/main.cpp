@@ -74,7 +74,7 @@ int main(int argc, const char * argv[])
     while(!forwardSearchResult && !backSearchResult)
     {
 #ifdef OVERLAP
-        std::cout << "waithing for other threads" << std::endl;
+        std::cout << "waiting for other threads" << std::endl;
 #endif
         counter++;
     }
